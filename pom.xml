@@ -1,14 +1,3 @@
-<!--
-
-    This Source Code Form is subject to the terms of the Mozilla Public License,
-    v. 2.0. If a copy of the MPL was not distributed with this file, You can
-    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
-    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
-
-    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
-    graphic logo is a trademark of OpenMRS Inc.
-
--->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
@@ -59,7 +48,7 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- OpenMRS Dependencies -->
+			
 			<dependency>
 				<groupId>org.openmrs.tools</groupId>
 				<artifactId>openmrs-tools</artifactId>
@@ -248,8 +237,7 @@
 				<artifactId>hibernate-ehcache</artifactId>
 				<version>${hibernateVersion}</version>
 				<exclusions>
-					<!-- Excluding since we are using a newer version where
-					arifactId is ehcache instead of ehcache-core -->
+					
 					<exclusion>
 						<groupId>net.sf.ehcache</groupId>
 						<artifactId>ehcache-core</artifactId>
@@ -377,7 +365,7 @@
 				<artifactId>mail</artifactId>
 				<version>1.4.1</version>
 				<exclusions>
-					<exclusion>  <!-- declare the exclusion here -->
+					<exclusion>  
 						<groupId>javax.activation</groupId>
 						<artifactId>activation</artifactId>
 					</exclusion>
@@ -677,8 +665,7 @@
 							<artifactId>openmrs-tools</artifactId>
 							<version>${project.version}</version>
 						</tagletArtifact>
-						<!-- For some reason some packages from org.springframework are being
-						included and causing errors. -->
+						
 						<excludePackageNames>org.springframework.*</excludePackageNames>
 					</configuration>
 					<executions>
@@ -690,8 +677,7 @@
 						</execution>
 					</executions>
 				</plugin>
-				<!--This plugin's configuration is used to store Eclipse m2e settings
-					only. It has no influence on the Maven build itself. -->
+				
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -812,7 +798,7 @@
 							<exclude>src/main/webapp/WEB-INF/view/scripts/jquery/**</exclude>
 							<exclude>src/main/webapp/WEB-INF/view/scripts/jquery-ui/**</exclude>
 							<exclude>src/main/webapp/WEB-INF/view/module/**</exclude>
-							<!-- From gitignore -->
+							
 							<exclude>.idea/**</exclude>
 							<exclude>target/**</exclude>
 							<exclude>bin/**</exclude>
@@ -990,11 +976,68 @@
 				</dependency>
 			</dependencies>
 		</profile>
-	</profiles>
+	<profile>
+        <id>vulas</id>
+        <activation>
+            <property>
+                <name>vulas</name>
+            </property>
+        </activation>
+        <properties>
+            <vulas.version>3.1.10-SNAPSHOT</vulas.version>
+            <vulas.shared.backend.serviceUrl>http://localhost:8033/backend/</vulas.shared.backend.serviceUrl>
+            <vulas.core.space.token>9237B647D37B9176837CB401EE2922F6</vulas.core.space.token>
+            <vulas.core.appContext.group>${project.groupId}</vulas.core.appContext.group>
+            <vulas.core.appContext.artifact>${project.artifactId}</vulas.core.appContext.artifact>
+            <vulas.core.appContext.version>${project.version}</vulas.core.appContext.version>
+        </properties>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>com.sap.research.security.vulas</groupId>
+                    <artifactId>plugin-maven</artifactId>
+                    <version>${vulas.version}</version>
+                    <configuration>
+                        <layeredConfiguration>
+                            <vulas.shared.backend.serviceUrl>${vulas.shared.backend.serviceUrl}</vulas.shared.backend.serviceUrl>
+                            <vulas.core.space.token>${vulas.core.space.token}</vulas.core.space.token>
+
+                            <vulas.core.appContext.group>${vulas.core.appContext.group}</vulas.core.appContext.group>
+                            <vulas.core.appContext.artifact>${vulas.core.appContext.artifact}</vulas.core.appContext.artifact>
+                            <vulas.core.appContext.version>${vulas.core.appContext.version}</vulas.core.appContext.version>
+
+                            <vulas.shared.tmpDir>${project.build.directory}/vulas/tmp</vulas.shared.tmpDir>
+                            <vulas.core.uploadDir>${project.build.directory}/vulas/upload</vulas.core.uploadDir>
+                            <vulas.core.app.sourceDir>${project.build.directory}/classes,${project.basedir}/src/main/java,${project.basedir}/src/main/python</vulas.core.app.sourceDir>
+
+                            
+                            <vulas.core.instr.sourceDir>${project.build.directory}</vulas.core.instr.sourceDir>
+                            <vulas.core.instr.targetDir>${project.build.directory}/vulas/target</vulas.core.instr.targetDir>
+                            <vulas.core.instr.includeDir>${project.build.directory}/vulas/include</vulas.core.instr.includeDir>
+                            <vulas.core.instr.libDir>${project.build.directory}/vulas/lib</vulas.core.instr.libDir>
+                            <vulas.core.instr.writeCode>false</vulas.core.instr.writeCode>
+                            <vulas.core.instr.instrumentorsChoosen>com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor</vulas.core.instr.instrumentorsChoosen>
+                            <vulas.core.instr.searchRecursive>false</vulas.core.instr.searchRecursive>
+                            <vulas.core.monitor.periodicUpload.enabled>false</vulas.core.monitor.periodicUpload.enabled>
+                            <vulas.core.instr.maxStacktraces>10</vulas.core.instr.maxStacktraces>
+
+                            
+                            <vulas.reach.wala.callgraph.reflection>NO_FLOW_TO_CASTS_NO_METHOD_INVOKE</vulas.reach.wala.callgraph.reflection>
+                            <vulas.reach.timeout>60</vulas.reach.timeout>
+
+                            
+                            <vulas.report.exceptionExcludeBugs />
+                            <vulas.report.reportDir>${project.build.directory}/vulas/report</vulas.report.reportDir>
+                        </layeredConfiguration>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
+    </profile></profiles>
 
 	<reporting>
 		<plugins>
-			<!-- docfilessubdirs config set to include image resource -->
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
